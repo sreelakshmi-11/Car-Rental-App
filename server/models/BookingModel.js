@@ -19,6 +19,10 @@ const BookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    image: {
+      type: String,
+      required: true,
+    },
     pickupDate: { type: Date, required: true },
     returnDate: { type: Date, required: true },
     status: {

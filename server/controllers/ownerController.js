@@ -73,12 +73,12 @@ export const getOwnersCars = async (req, res) => {
         message: "User not found",
       });
     }
-    const car = await Car.findOne({ owner: _id });
+    const cars = await Car.find({ owner: _id });
 
     res.json({
       success: true,
       message: "Car details fetched successfully",
-      car: car,
+      cars: cars,
     });
   } catch (error) {
     console.log(error.message);
@@ -179,7 +179,7 @@ export const getDashboardData = async (req, res) => {
       .filter((booking) => booking.status === "confirmed")
       .reduce((acc, booking) => acc + booking.price, 0);
 
-    const getDashboardData = {
+    const dashboardData = {
       totalCars: cars.length,
       totalBookings: bookings.length,
       totalPendingBookings: pendingBookings.length,
@@ -189,7 +189,7 @@ export const getDashboardData = async (req, res) => {
     res.json({
       success: true,
       message: "Dashboard data fetched successfully",
-      getDashboardData,
+      dashboardData,
     });
   } catch (error) {
     console.log(error.message);
@@ -202,7 +202,7 @@ export const getDashboardData = async (req, res) => {
 
 export const updateUserImage = async (req, res) => {
   try {
-    const { _id, role } = req.role;
+    const { _id, role } = req.user;
 
     const imageFile = req.file;
 

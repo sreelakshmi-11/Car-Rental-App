@@ -1,20 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
-import { dummyCarData } from "../assets/assets";
 import Loader from "../components/Loader";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const CarDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [car, setCar] = useState(null);
   const currency = import.meta.env.VITE_CURRENCY;
-  const [PickupDate, setPickupDate] = useState("");
 
+  const { cars, axios, pickupDate, setPickupDate, returnDate, setReturnDate } =
+    useAppContext();
   useEffect(() => {
-    setCar(dummyCarData.find((car) => car._id === id));
-  }, [id]);
+    setCar(cars?.find((car) => car._id === id));
+  }, [cars, id]);
 
+  const handleSubmitForm = async (e) => {
+    console.log("triggered");
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post("/api/bookings/create", {
+        car: id,
+        pickupDate,
+        returnDate,
+      });
+      if (data.success) {
+        toast.success(data.message);
+        console.log(data);
+        navigate("/my-bookings");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
   return car ? (
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">
       <button
@@ -92,7 +116,10 @@ const CarDetails = () => {
             <span className="text-sm text-gray-500">per day</span>
           </div>
           <hr />
-          <form className="flex flex-col gap-6 mt-4">
+          <form
+            onSubmit={handleSubmitForm}
+            className="flex flex-col gap-6 mt-4"
+          >
             <div className="flex flex-col gap-2">
               <label>Pickup date</label>
               <input
@@ -100,6 +127,7 @@ const CarDetails = () => {
                 placeholder="Pickup Date"
                 className="border px-3 py-2 rounded-md"
                 required
+                value={pickupDate || ""}
                 min={new Date().toISOString().split("T")[0]}
                 onChange={(e) => setPickupDate(e.target.value)}
               />
@@ -111,10 +139,15 @@ const CarDetails = () => {
                 placeholder="Return Date"
                 className="border px-3 py-2 rounded-md"
                 required
-                min={PickupDate}
+                min={pickupDate}
+                value={returnDate || ""}
+                onChange={(e) => setReturnDate(e.target.value)}
               />
             </div>
-            <button className="border px-3 py-2 rounded-md bg-primary text-white hover:bg-primary-dull">
+            <button
+              type="submit"
+              className="border px-3 py-2 rounded-md bg-primary text-white hover:bg-primary-dull"
+            >
               Book Now
             </button>
             <p className="text-sm text-gray-500">

@@ -1,11 +1,11 @@
 import Booking from "../models/BookingModel.js";
 import Car from "../models/Car.js";
 
-export const checkAvailability = (car, pickupDate, returnDate) => {
-  const booking = Booking.find({
+export const checkAvailability = async (car, pickupDate, returnDate) => {
+  const booking = await Booking.find({
     car,
-    pickupDate: { $lte: returnDate },
-    returnDate: { $gte: pickupDate },
+    pickupDate: { $lte: new Date(returnDate) },
+    returnDate: { $gte: new Date(pickupDate) },
   });
   return booking.length === 0;
 };
@@ -45,26 +45,25 @@ export const createBooking = async (req, res) => {
     const { _id } = req.user;
     const { car, pickupDate, returnDate } = req.body;
 
-    const isAvailable = await checkAvailability(car, pickupDate, returnDate);
-
-    if (!isAvailable) {
-      req.json({
-        success: false,
-        message: "Car is not available",
-      });
-    }
     const carData = await Car.findById(car);
 
     //calculating price
+    if (!car || !pickupDate || !returnDate) {
+      return res.json({
+        success: false,
+        message: "car details, Pickup and return dates are required",
+      });
+    }
 
     const picked = new Date(pickupDate);
     const returned = new Date(returnDate);
 
     const noOfDays = Math.ceil((returned - picked) / (1000 * 60 * 60 * 24));
-    const price = carData.price * noOfDays;
+    const price = carData.pricePerDay * noOfDays;
 
-    await Booking.create({
+    const booking = new Booking({
       car,
+      image: carData.image,
       owner: carData.owner,
       user: _id,
       pickupDate,
@@ -72,10 +71,12 @@ export const createBooking = async (req, res) => {
       status: "pending",
       price,
     });
+    await booking.save();
 
     res.json({
       success: true,
       message: "Booking created successfully",
+      booking,
     });
   } catch (error) {
     console.log(error.message);
@@ -93,7 +94,7 @@ export const getBookingsData = async (req, res) => {
     res.json({
       success: true,
       message: "Bookings fetched successfully",
-      bookings,
+      bookings: bookings,
     });
   } catch (error) {
     console.log(error.message);

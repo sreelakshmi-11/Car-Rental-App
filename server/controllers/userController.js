@@ -1,11 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
-
-const generateToken = (userId) => {
-  const payload = userId;
-  return jwt.sign(payload, process.env.JWT_SECRET);
-};
+import Car from "../models/Car.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -27,7 +23,7 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
-    const token = generateToken(user._id.toString());
+    const token = jwt.sign(user._id.toString(), process.env.JWT_SECRET);
     return res.json({
       success: true,
       message: "User registered successfully",
@@ -62,7 +58,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    const token = generateToken(user._id.toString());
+    const token = jwt.sign(user._id.toString(), process.env.JWT_SECRET);
     return res.json({
       success: true,
       message: "User logged in successfully",
@@ -83,6 +79,22 @@ export const getuserData = async (req, res) => {
     res.json({
       success: true,
       user: user,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getCars = async (req, res) => {
+  try {
+    let cars = await Car.find({ isAvailable: true });
+    res.json({
+      success: true,
+      cars,
     });
   } catch (error) {
     console.log(error.message);

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { assets, dummyDashboardData } from "../../assets/assets";
+import { assets } from "../../assets/assets";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
-  const currency = import.meta.env.VITE_CURRENCY;
+  const { axios, isOwner, currency, fetchOwnerbookings, bookings } =
+    useAppContext();
+
   const [data, setData] = useState({
     totalCars: 0,
     totalBookings: 0,
@@ -25,18 +29,36 @@ const Dashboard = () => {
     },
     {
       title: "Pending",
-      value: data.pendingBookings,
+      value: data.totalPendingBookings,
       icon: assets.cautionIconColored,
     },
     {
       title: "Confirmed",
-      value: data.completedBookings,
+      value: data.totalCompletedBookings,
       icon: assets.listIconColored,
     },
   ];
+
+  const fetchDashboardData = async () => {
+    try {
+      const { data } = await axios.get("/api/owner/dashboard");
+      if (data.success) {
+        setData(data.dashboardData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
   useEffect(() => {
-    setData(dummyDashboardData);
-  }, []);
+    if (isOwner) {
+      fetchDashboardData();
+      fetchOwnerbookings();
+    }
+  }, [isOwner]);
+  const recentBookings = bookings.slice(0, 4);
 
   return (
     <div className=" flex flex-col p-10 gap-4">
@@ -70,7 +92,7 @@ const Dashboard = () => {
             <p className="text-gray-500">Latest customer bookings</p>
           </div>
           <div className="flex flex-col gap-4">
-            {data.recentBookings.map((booking, i) => (
+            {recentBookings.map((booking, i) => (
               <div key={i} className="flex justify-between">
                 <div className="flex gap-4">
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
@@ -106,7 +128,7 @@ const Dashboard = () => {
           </div>
           <span className="text-primary text-3xl font-bold">
             {currency}
-            {dummyDashboardData.monthlyRevenue}
+            {data.monthlyRevenue}
           </span>
         </div>
       </div>

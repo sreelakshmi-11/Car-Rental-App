@@ -11,9 +11,9 @@ import { createBooking } from "../controllers/BookingController.js";
 const bookingRouter = express.Router();
 
 bookingRouter.post("/check-availability", checkAvailability);
-bookingRouter.post("/create-route", protect, createBooking);
+bookingRouter.post("/create", protect, createBooking);
 bookingRouter.get("/user", protect, getBookingsData);
 bookingRouter.get("/owner", protect, getOwnerBookings);
-bookingRouter.get("/change-status", protect, changeBookingStatus);
+bookingRouter.post("/change-status", protect, changeBookingStatus);
 
 export default bookingRouter;

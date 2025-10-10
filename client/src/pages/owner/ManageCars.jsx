@@ -1,17 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { assets, dummyCarData } from "../../assets/assets";
+import { assets } from "../../assets/assets";
 import Title from "../../components/Title";
+import { useAppContext } from "../../context/AppContext";
+import toast from "react-hot-toast";
 
 const ManageCars = () => {
+  const { isOwner, axios, currency } = useAppContext();
   const [cars, setcars] = useState([]);
-  const currency = import.meta.env.VITE_CURRENCY;
+
   const fetchOwnerCars = async () => {
-    setcars(dummyCarData);
+    try {
+      const { data } = await axios.get("/api/owner/cars");
+      if (data.success) {
+        toast.success(data.message);
+        setcars(data.cars);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  const toggleAvailability = async (carId) => {
+    try {
+      const { data } = await axios.post("/api/owner/toggle-cars", { carId });
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnerCars();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  const deleteCars = async (carId) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to delete this car?"
+      );
+      if (!confirm) return;
+      const { data } = await axios.delete("/api/owner/delete-car", {
+        data: { carId },
+      });
+      if (data.success) {
+        toast.success(data.message);
+        fetchOwnerCars();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
-    fetchOwnerCars();
-  }, []);
+    isOwner && fetchOwnerCars();
+  }, [isOwner]);
+  console.log(cars);
   return (
     <div className="p-10 flex flex-col gap-6">
       <Title
@@ -55,25 +101,30 @@ const ManageCars = () => {
                 <td>
                   <span
                     className={`rounded-lg px-3 py-2 text-xs ${
-                      car.isAvaliable
+                      car.isAvailable
                         ? "text-green-500 bg-green-100 "
                         : "text-red-500 bg-red-100"
                     }`}
                   >
-                    {car.isAvaliable ? "Available" : "Not Available"}
+                    {car.isAvailable ? "Available" : "Not Available"}
                   </span>
                 </td>
                 <td className="p-5">
                   <div className="flex gap-3">
                     <img
                       src={
-                        !car.isAvaliable
+                        !car.isAvailable
                           ? assets.eye_icon
                           : assets.eye_close_icon
                       }
                       alt=""
+                      onClick={() => toggleAvailability(car._id)}
                     />
-                    <img src={assets.delete_icon} alt="" />
+                    <img
+                      src={assets.delete_icon}
+                      alt=""
+                      onClick={() => deleteCars(car._id)}
+                    />
                   </div>
                 </td>
               </tr>

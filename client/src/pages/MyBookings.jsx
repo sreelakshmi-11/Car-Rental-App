@@ -1,15 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { assets, dummyMyBookingsData } from "../assets/assets";
+import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const MyBookings = () => {
-  const [bookings, setbookings] = useState([]);
-  const currency = import.meta.env.VITE_CURRENCY;
-  const fetchBookings = () => {
-    setbookings(dummyMyBookingsData);
+  const { user, currency, axios } = useAppContext();
+  const [bookings, setBookings] = useState([]);
+  const fetchBookings = async () => {
+    try {
+      const { data } = await axios.get("/api/bookings/user");
+      if (data.success) {
+        setBookings(data.bookings);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
   useEffect(() => {
-    fetchBookings();
-  });
+    user && fetchBookings();
+  }, [user]);
 
   return (
     <div className="flex flex-col gap-4 mt-6 px-20">
@@ -19,18 +31,21 @@ const MyBookings = () => {
       </div>
       <div className="flex flex-col gap-4">
         {bookings.map((item, i) => (
-          <div className="grid grid-cols-3 border border-gray-400 p-5 rounded-lg gap-4">
+          <div
+            key={i}
+            className="grid grid-cols-3 border border-gray-400 p-5 rounded-lg gap-4"
+          >
             <div className="flex gap-4 ">
               <div key={item._id}>
                 <img
-                  src={item.car.image}
+                  src={item.image}
                   className=" max-h-[150px] object-cover object-fit"
                 />
                 <h1>
-                  {item.car.brand} {item.car.model}
+                  {item.brand} {item.model}
                 </h1>
                 <p className="text-gray-400">
-                  {item.car.year}.{item.car.category}.{item.car.location}
+                  {item.year}.{item.category}.{item.location}
                 </p>
               </div>
             </div>
@@ -51,8 +66,8 @@ const MyBookings = () => {
                   Rental Period
                 </p>
                 <span className="ml-[10px]">
-                  {item.pickupDate.split("T")[0].replaceAll("-", "/")} -
-                  {item.returnDate.split("T")[0].replaceAll("-", "/")}
+                  {item.pickupDate.split("T")[0]} to{" "}
+                  {item.returnDate.split("T")[0]}
                 </span>
               </div>
               <div>
@@ -60,23 +75,23 @@ const MyBookings = () => {
                   <img src={assets.location_icon_colored} />
                   Pickup Location
                 </p>
-                <span>{item.car.location}</span>
+                <span>{item.location}</span>
               </div>
               <div>
                 <p className="flex gap-2">
                   <img src={assets.location_icon_colored} />
                   Return Location
                 </p>
-                <span>{item.car.location}</span>
+                <span>{item.location}</span>
               </div>
             </div>
 
             <div className="flex flex-col items-end">
               <p>Total price</p>
               <span className="text-primary font-bold text-2xl">
-                {currency} {item.car.pricePerDay}
+                {currency} {item.price}
               </span>
-              <p>Booked on {item.car.createdAt.split("T")[0]}</p>
+              <p>Booked on {item.createdAt.split("T")[0]}</p>
             </div>
           </div>
         ))}
