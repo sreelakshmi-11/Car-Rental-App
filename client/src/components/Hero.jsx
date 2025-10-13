@@ -37,7 +37,7 @@ const Hero = () => {
                 </option>
               ))}
             </select>
-            <p>{pickupLocation ? pickupLocation : "Please select location"}</p>
+            <p> Please select location</p>
           </div>
           <div className="flex flex-col items-start gap-2">
             <label htmlFor="pickup-date">PickUp Date</label>

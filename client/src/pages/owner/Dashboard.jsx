@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
+import Title from "../../components/Title";
 
 const Dashboard = () => {
   const { axios, isOwner, currency, fetchOwnerbookings, bookings } =
@@ -61,14 +62,12 @@ const Dashboard = () => {
   const recentBookings = bookings.slice(0, 4);
 
   return (
-    <div className=" flex flex-col p-10 gap-4">
-      <div>
-        <h1 className=" text-2xl">Admin Dashboard</h1>
-        <p className="text-gray-500 w-[480px]">
-          Monitor overall platform performance including total
-          cars,bookings,revenue and recent activities
-        </p>
-      </div>
+    <div className=" flex flex-col gap-4 mx-auto mt-10">
+      <Title
+        title="Admin Dashboard"
+        subTitle=" Monitor overall platform performance including total
+          cars,bookings,revenue and recent activities"
+      />
       <div className="grid grid-cols-4 gap-4 ">
         {dashboardData.map((item, i) => (
           <div

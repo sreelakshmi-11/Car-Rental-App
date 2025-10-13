@@ -20,23 +20,25 @@ function App() {
   const { showLogin } = useAppContext();
   const isOwnersPath = useLocation().pathname.startsWith("/owner");
   return (
-    <div className="text-sm">
+    <div className="text-sm min-h-screen">
       <Toaster />
       {showLogin && <Login />}
       {!isOwnersPath && <Navbar />}
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/car-details/:id" element={<CarDetails />}></Route>
-        <Route path="/cars" element={<Cars />}></Route>
-        <Route path="/my-bookings" element={<MyBookings />}></Route>
-        <Route path="/owner" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="add-car" element={<AddCar />} />
-          <Route path="manage-cars" element={<ManageCars />} />
-          <Route path="manage-bookings" element={<ManageBookings />} />
-        </Route>
-      </Routes>
-      {!isOwnersPath && <Footer />}
+      <div className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/car-details/:id" element={<CarDetails />}></Route>
+          <Route path="/cars" element={<Cars />}></Route>
+          <Route path="/my-bookings" element={<MyBookings />}></Route>
+          <Route path="/owner" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="add-car" element={<AddCar />} />
+            <Route path="manage-cars" element={<ManageCars />} />
+            <Route path="manage-bookings" element={<ManageBookings />} />
+          </Route>
+        </Routes>
+      </div>
+      {!isOwnersPath && <Footer className="mt-auto" />}
     </div>
   );
 }

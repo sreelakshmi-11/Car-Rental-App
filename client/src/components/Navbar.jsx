@@ -2,23 +2,19 @@ import React, { useState } from "react";
 import { assets, menuLinks } from "../assets/assets";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
-import { toast } from "react-hot-toast";
 
 import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 const Navbar = () => {
   const location = useLocation();
-  const { user, logout, isOwner, axios, setIsOwner, changeRole } =
-    useAppContext();
+  const { user, logout, isOwner, changeRole } = useAppContext();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { setShowLogin } = useAppContext();
 
   return (
     <div
-      className={`flex justify-between items-center px-30 py-4 text-gray-600 border-b  border-borderColor relative transition-all  ${
-        location.pathname === "/" && "bg-light"
-      } `}
+      className={`flex justify-between items-center px-30 py-4 text-gray-600 border-b  border-borderColor relative transition-all`}
     >
       <Link to="/">
         <img src={assets.logo} alt="logo" className="h-8" />
@@ -35,7 +31,7 @@ const Navbar = () => {
             {link.name}
           </Link>
         ))}
-       
+
         <div className="flex items-center gap-6">
           <button
             className="cursor-pointer"

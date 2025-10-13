@@ -59,12 +59,12 @@ const ManageCars = () => {
   }, [isOwner]);
   console.log(cars);
   return (
-    <div className="p-10 flex flex-col gap-6">
+    <div className="mx-auto mt-10 flex flex-col gap-6">
       <Title
         title="Manage Cars"
         subTitle="View all listed cars, update their details, or remove them from the booking platform"
       />
-      <div>
+      <div className="flex flex-col mx-auto">
         <table className="border border-gray-400">
           <thead>
             <tr className="p-5 border border-gray-400">

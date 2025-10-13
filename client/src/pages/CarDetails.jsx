@@ -29,16 +29,15 @@ const CarDetails = () => {
       });
       if (data.success) {
         toast.success(data.message);
-        console.log(data);
         navigate("/my-bookings");
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
       toast.error(error.message);
     }
   };
+
   return car ? (
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">
       <button
@@ -49,7 +48,7 @@ const CarDetails = () => {
         Back to all cars
       </button>
       <div className="flex gap-8 lg:gap-12 mb-6">
-        <div className="w-3/4">
+        <div className="w-3/4 relative">
           <img
             src={car.image}
             alt={`${car.brand} ${car.model}`}

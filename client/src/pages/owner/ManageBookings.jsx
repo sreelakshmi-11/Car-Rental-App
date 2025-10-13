@@ -28,12 +28,12 @@ const ManageBookings = () => {
   }, []);
 
   return (
-    <div className=" flex flex-col p-10 gap-4">
+    <div className=" flex flex-col mx-auto mt-10 gap-4 ">
       <Title
         title="Manage Bookings"
         subTitle="Track all customer bookings,approve or cancel requests,and manage booking statuses"
       />
-      <div className="mt-10">
+      <div className="mt-10 mx-auto">
         <table className="border border-gray-400">
           <thead>
             <tr className="p-5 border border-gray-400">

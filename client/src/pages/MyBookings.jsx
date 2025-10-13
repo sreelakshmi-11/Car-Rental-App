@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
+import Title from "../components/Title";
 
 const MyBookings = () => {
-  const { user, currency, axios } = useAppContext();
+  const { user, currency, axios, setShowLogin } = useAppContext();
   const [bookings, setBookings] = useState([]);
   const fetchBookings = async () => {
     try {
@@ -13,6 +14,7 @@ const MyBookings = () => {
         setBookings(data.bookings);
         toast.success(data.message);
       } else {
+        setShowLogin(true);
         toast.error(data.message);
       }
     } catch (error) {
@@ -20,15 +22,13 @@ const MyBookings = () => {
     }
   };
   useEffect(() => {
-    user && fetchBookings();
+    if (user) fetchBookings();
+    else setShowLogin(true);
   }, [user]);
 
   return (
-    <div className="flex flex-col gap-4 mt-6 px-20">
-      <div className="flex flex-col gap-3">
-        <h1 className="font-bold text-4xl">My Bookings</h1>
-        <p className="text-gray-400">View and manage your car bookings</p>
-      </div>
+    <div className="flex flex-col gap-4 mt-6 px-20 min-h-[60vh]">
+      <Title title="My Bookings" subTitle="View and manage your car bookings" />
       <div className="flex flex-col gap-4">
         {bookings.map((item, i) => (
           <div

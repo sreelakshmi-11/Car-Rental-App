@@ -43,8 +43,8 @@ const Cars = () => {
         setFilteredData(data.availableCars);
         if (data.availableCars.length === 0) {
           toast.success("No available cars");
+          console.log("no cars available");
         }
-        return null;
       }
     } catch (error) {
       toast.error(error.message);
@@ -57,9 +57,18 @@ const Cars = () => {
   useEffect(() => {
     cars?.length > 0 && !isSearchData && applyFilter();
   }, [input, cars]);
+
+  const availableCars = isSearchData ? filteredData : cars;
+  if (availableCars) {
+    return (
+      <div className="flex justify-center items-center w-full text-2xl min-h-[60vh]">
+        No cars available
+      </div>
+    );
+  }
   return (
     <div>
-      <div className="w-full flex flex-col items-center justify-center  px-10 py-16 gap-4 bg-gray-100">
+      <div className="w-full flex flex-col items-center justify-center  px-10 py-16 gap-4 bg-gray-100 ">
         <h1 className="font-bold text-4xl">Available Cars</h1>
         <p className="text-gray-500">
           Browse our selection of premium vehicles available for our next
