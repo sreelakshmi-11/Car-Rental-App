@@ -2,59 +2,52 @@ import React, { useState } from "react";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
 
 const AddCar = () => {
   const [image, setImage] = useState("");
-
   const { axios, currency } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [carData, setCarData] = useState({
-    brand: "",
-    model: "",
-    year: 0,
-    pricePerDay: 0,
-    category: "",
-    transmission: "",
-    fuel_type: "",
-    seating_capacity: 0,
-    location: "",
-    description: "",
-  });
 
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    if (isLoading) return null;
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = async (data) => {
+    if (!image) {
+      setError("image", { type: "manual", message: "Image is required" });
+      return;
+    }
+    const payload = {
+      ...data,
+      pricePerDay: Number(data.pricePerDay),
+      seating_capacity: Number(data.seating_capacity),
+      year: Number(data.year),
+    };
+
     setIsLoading(true);
     try {
       const formData = new FormData();
       formData.append("image", image);
-      formData.append("carData", JSON.stringify(carData));
+      formData.append("carData", JSON.stringify(payload));
 
-      const { data } = await axios.post("/api/owner/add-car", formData);
-      if (data.success) {
-        toast.success(data.message);
+      const { data: res } = await axios.post("/api/owner/add-car", formData);
+
+      if (res.success) {
+        toast.success(res.message);
         setImage(null);
-        setCarData({
-          brand: "",
-          model: "",
-          year: 0,
-          pricePerDay: 0,
-          category: "",
-          transmission: "",
-          fuel_type: "",
-          seating_capacity: 0,
-          location: "",
-          description: "",
-        });
+      } else {
+        toast.error(res.message || "Failed to add car");
       }
-      toast.success(data.message);
     } catch (error) {
-      toast.error(error.message);
-      console.log(error.message);
+      toast.error(error.message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <div className=" flex flex-col gap-6 p-10">
       <div className="flex flex-col gap-3">
@@ -65,7 +58,7 @@ const AddCar = () => {
         </p>
       </div>
 
-      <form className="flex flex-col gap-4" onSubmit={onSubmitHandler}>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-4">
           <div className="flex gap-3">
             <label htmlFor="car-image">
@@ -86,6 +79,9 @@ const AddCar = () => {
               Upload a picture of your car
             </p>
           </div>
+          {errors.image && (
+            <p className="text-red-500">{errors.image.message}</p>
+          )}
         </div>
         <div className="flex  gap-4">
           <div className="flex flex-col gap-2 w-full">
@@ -94,10 +90,9 @@ const AddCar = () => {
               type="text"
               placeholder="e.g. BMW,Mercedes,Benz..."
               className="border px-3 py-2 rounded"
-              onChange={(e) =>
-                setCarData({ ...carData, brand: e.target.value })
-              }
+              {...register("brand", { required: true })}
             />
+            {errors.brand && <p className="text-red-500">Brand is required</p>}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label>Model</label>
@@ -105,10 +100,9 @@ const AddCar = () => {
               type="text"
               placeholder="e.g. X5,E-class,M4..."
               className="border px-3 py-2 rounded"
-              onChange={(e) =>
-                setCarData({ ...carData, model: e.target.value })
-              }
+              {...register("model", { required: true })}
             />
+            {errors.model && <p className="text-red-500">Model is required</p>}
           </div>
         </div>
         <div className="flex  gap-4">
@@ -118,14 +112,15 @@ const AddCar = () => {
               type="number"
               placeholder="select year"
               className="border px-3 py-2 rounded"
-              onChange={(e) => setCarData({ ...carData, year: e.target.value })}
+              {...register("year", { required: "Year is required" })}
             >
-              <option>select year</option>
-              <option>2025</option>
-              <option>2024</option>
-              <option>2023</option>
-              <option>2022</option>
+              <option value="">select year</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
             </select>
+            {errors.year && <p className="text-red-500">Year is required</p>}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label>Daily Price({currency})</label>
@@ -133,10 +128,13 @@ const AddCar = () => {
               type="number"
               placeholder="100"
               className="border px-3 py-2 rounded"
-              onChange={(e) =>
-                setCarData({ ...carData, pricePerDay: e.target.value })
-              }
+              {...register("pricePerDay", {
+                required: "Price per day is required",
+              })}
             />
+            {errors.pricePerDay && (
+              <p className="text-red-500">Price per day is required</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label>Category</label>
@@ -144,16 +142,17 @@ const AddCar = () => {
               type="text"
               placeholder="select category"
               className="border px-3 py-2 rounded"
-              onChange={(e) =>
-                setCarData({ ...carData, category: e.target.value })
-              }
+              {...register("category", { required: "category is required" })}
             >
-              <option>select a category</option>
-              <option>Sedan</option>
-              <option>Hatchback</option>
-              <option>Luxury</option>
-              <option>Convertible</option>
+              <option value="">select a category</option>
+              <option value="sedan">Sedan</option>
+              <option value="hatchback">Hatchback</option>
+              <option value="luxury">Luxury</option>
+              <option value="convertible">Convertible</option>
             </select>
+            {errors.category && (
+              <p className="text-red-500">Category is required</p>
+            )}
           </div>
         </div>
         <div className="flex gap-4">
@@ -163,28 +162,32 @@ const AddCar = () => {
               type="text"
               placeholder="select transmission"
               className="border px-3 py-2 rounded"
-              onChange={(e) =>
-                setCarData({ ...carData, transmission: e.target.value })
-              }
+              {...register("transmission", {
+                required: "transmission is required",
+              })}
             >
-              <option>Automatic</option>
-              <option>Manual</option>
+              <option value="">select transmission</option>
+              <option value="automatic">Automatic</option>
+              <option value="manual">Manual</option>
             </select>
+            {errors.transmission && (
+              <p className="text-red-500">Transmission is required</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label>Fuel Type</label>
             <select
               type="text"
               className="border px-3 py-2 rounded"
-              onChange={(e) =>
-                setCarData({ ...carData, fuel_type: e.target.value })
-              }
+              {...register("fuel_type", { required: "fuel type is required" })}
             >
-              {" "}
-              <option>select a fuel type</option>
-              <option>Diesel</option>
-              <option>Petrol</option>
+              <option value="">select a fuel type</option>
+              <option value="diesel">Diesel</option>
+              <option value="petrol">Petrol</option>
             </select>
+            {errors.fuel_type && (
+              <p className="text-red-500">Fuel type is required</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label>Seating Capacity</label>
@@ -192,10 +195,13 @@ const AddCar = () => {
               type="text"
               placeholder="5"
               className="border px-3 py-2 rounded"
-              onChange={(e) =>
-                setCarData({ ...carData, seating_capacity: e.target.value })
-              }
+              {...register("seating_capacity", {
+                required: "seating capacity is required",
+              })}
             />
+            {errors.seating_capacity && (
+              <p className="text-red-500">Seating capacity is required</p>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-2 w-full">
@@ -203,16 +209,17 @@ const AddCar = () => {
           <select
             type="text"
             className="border px-3 py-2 rounded"
-            onChange={(e) =>
-              setCarData({ ...carData, location: e.target.value })
-            }
+            {...register("location", { required: "location is required" })}
           >
-            <option>select a location</option>
-            <option>San Fransisco</option>
-            <option>Texus</option>
-            <option>New york</option>
-            <option>USA</option>
+            <option value="">select a location</option>
+            <option value="San Fransisco">San Fransisco</option>
+            <option value="Texus">Texus</option>
+            <option value="New york">New york</option>
+            <option value="USA">USA</option>
           </select>
+          {errors.location && (
+            <p className="text-red-500">Location is required</p>
+          )}
         </div>
         <div className="flex flex-col gap-2 w-full">
           <label>Description</label>
@@ -220,10 +227,13 @@ const AddCar = () => {
             type="text"
             placeholder="Describe your car condition,and any notable details..."
             className="border px-3 py-2 rounded h-30"
-            onChange={(e) =>
-              setCarData({ ...carData, description: e.target.value })
-            }
+            {...register("description", {
+              required: "description is required",
+            })}
           />
+          {errors.description && (
+            <p className="text-red-500">Description is required</p>
+          )}
         </div>
         <button
           type="submit"
