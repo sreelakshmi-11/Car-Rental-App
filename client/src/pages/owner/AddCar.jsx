@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 
 const AddCar = () => {
   const [image, setImage] = useState("");
-  const { axios, currency } = useAppContext();
+  const { axios, currency, fetchCars } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -38,6 +38,7 @@ const AddCar = () => {
       if (res.success) {
         toast.success(res.message);
         setImage(null);
+        fetchCars();
       } else {
         toast.error(res.message || "Failed to add car");
       }
