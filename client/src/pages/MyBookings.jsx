@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import Title from "../components/Title";
 
 const MyBookings = () => {
-  const { user, currency, axios, setShowLogin } = useAppContext();
+  const { user, currency, axios, setShowLogin, navigate } = useAppContext();
   const [bookings, setBookings] = useState([]);
   const fetchBookings = async () => {
     try {
@@ -23,7 +23,10 @@ const MyBookings = () => {
   };
   useEffect(() => {
     if (user) fetchBookings();
-    else setShowLogin(true);
+    else {
+      setShowLogin(true);
+      navigate("/");
+    }
   }, [user]);
 
   return (

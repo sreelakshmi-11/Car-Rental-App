@@ -52,12 +52,18 @@ export const AppProvider = ({ children }) => {
   };
   const changeRole = async () => {
     try {
+      if (!user) {
+        setShowLogin(true);
+        toast.error("Please login");
+        navigate("/");
+        return;
+      }
       const { data } = await axios.post("/api/owner/change-role");
       if (data.success) {
         setIsOwner(true);
         toast.success(data.message);
       } else {
-        toast.error(data.message);
+        toast.error("user not logged in");
       }
     } catch (error) {
       toast.error(error.message);
