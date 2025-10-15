@@ -59,12 +59,12 @@ const ManageCars = () => {
   }, [isOwner]);
   console.log(cars);
   return (
-    <div className="mx-auto mt-10 flex flex-col gap-6">
+    <div className="mx-auto mt-10 flex flex-col gap-6 p-10">
       <Title
         title="Manage Cars"
         subTitle="View all listed cars, update their details, or remove them from the booking platform"
       />
-      <div className="flex flex-col mx-auto">
+      <div className="flex flex-col mx-auto overflow-x-scroll">
         <table className="border border-gray-400">
           <thead>
             <tr className="p-5 border border-gray-400">
@@ -80,7 +80,7 @@ const ManageCars = () => {
               <tr key={i} className="p-5 border border-gray-400">
                 <td className="p-5">
                   <div className="flex gap-3">
-                    <img src={car.image} alt="car" className="w-10" />
+                    <img src={car.image} alt="car" className=" w-6 md:w-10" />
                     <div className="flex flex-col">
                       <div className="flex gap-2 text-gray-500">
                         <span>{car.brand}</span>
@@ -93,8 +93,8 @@ const ManageCars = () => {
                     </div>
                   </div>
                 </td>
-                <td className="p-5">{car.category}</td>
-                <td className="p-5">
+                <td className="p-2 md:p-5">{car.category}</td>
+                <td className="p-2 md:p-5">
                   {currency}
                   {car.pricePerDay}/day
                 </td>
@@ -109,8 +109,8 @@ const ManageCars = () => {
                     {car.isAvailable ? "Available" : "Not Available"}
                   </span>
                 </td>
-                <td className="p-5">
-                  <div className="flex gap-3">
+                <td className=" p-2 md:p-5">
+                  <div className="flex gap-1 md:gap-3">
                     <img
                       src={
                         !car.isAvailable

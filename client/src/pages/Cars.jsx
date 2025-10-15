@@ -59,7 +59,7 @@ const Cars = () => {
   }, [input, cars]);
 
   const availableCars = isSearchData ? filteredData : cars;
-  if (availableCars) {
+  if (!availableCars) {
     return (
       <div className="flex justify-center items-center w-full text-2xl min-h-[60vh]">
         No cars available

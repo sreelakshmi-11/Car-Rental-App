@@ -11,8 +11,18 @@ const CarDetails = () => {
   const [car, setCar] = useState(null);
   const currency = import.meta.env.VITE_CURRENCY;
 
-  const { cars, axios, pickupDate, setPickupDate, returnDate, setReturnDate } =
-    useAppContext();
+  const {
+    cars,
+    axios,
+    pickupDate,
+    setPickupDate,
+    returnDate,
+    setReturnDate,
+    pickupLocation,
+    setPickupLocation,
+    returnLocation,
+    setReturnLocation,
+  } = useAppContext();
   useEffect(() => {
     setCar(cars?.find((car) => car._id === id));
   }, [cars, id]);
@@ -26,6 +36,8 @@ const CarDetails = () => {
         car: id,
         pickupDate,
         returnDate,
+        pickupLocation,
+        returnLocation,
       });
       if (data.success) {
         toast.success(data.message);
@@ -106,7 +118,7 @@ const CarDetails = () => {
             </div>
           </div>
         </div>
-        <div className="w-1/4 px-6 shadow-lg h-[370px]">
+        <div className="w-1/4 px-6 shadow-lg h-[600px]">
           <div className="flex items-center justify-between mb-4">
             <span className="font-bold text-[26px]">
               {currency}
@@ -141,6 +153,28 @@ const CarDetails = () => {
                 min={pickupDate}
                 value={returnDate || ""}
                 onChange={(e) => setReturnDate(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label> Pickup Location</label>
+              <input
+                type="text"
+                placeholder="pickup Location"
+                className="border px-3 py-2 rounded-md"
+                required
+                value={pickupLocation}
+                onChange={(e) => setPickupLocation(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label> return Location</label>
+              <input
+                type="text"
+                placeholder="return Location"
+                className="border px-3 py-2 rounded-md"
+                required
+                value={returnLocation}
+                onChange={(e) => setReturnLocation(e.target.value)}
               />
             </div>
             <button

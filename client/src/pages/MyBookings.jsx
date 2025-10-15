@@ -33,13 +33,13 @@ const MyBookings = () => {
         {bookings.map((item, i) => (
           <div
             key={i}
-            className="grid grid-cols-3 border border-gray-400 p-5 rounded-lg gap-4"
+            className="grid md:grid-cols-3 border border-gray-400 p-5 rounded-lg gap-4"
           >
-            <div className="flex gap-4 ">
+            <div className="flex gap-4 items-center justify-center ">
               <div key={item._id}>
                 <img
                   src={item.image}
-                  className=" max-h-[150px] object-cover object-fit"
+                  className="max-h-[150px] object-cover object-fit"
                 />
                 <h1>
                   {item.brand} {item.model}
@@ -75,18 +75,18 @@ const MyBookings = () => {
                   <img src={assets.location_icon_colored} />
                   Pickup Location
                 </p>
-                <span>{item.location}</span>
+                <span>{item.pickupLocation}</span>
               </div>
               <div>
                 <p className="flex gap-2">
                   <img src={assets.location_icon_colored} />
                   Return Location
                 </p>
-                <span>{item.location}</span>
+                <span>{item.returnLocation}</span>
               </div>
             </div>
 
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col md:items-end">
               <p>Total price</p>
               <span className="text-primary font-bold text-2xl">
                 {currency} {item.price}

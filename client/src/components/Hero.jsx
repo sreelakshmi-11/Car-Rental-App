@@ -16,13 +16,13 @@ const Hero = () => {
     );
   };
   return (
-    <div className="h-screen flex flex-col items-center justify-center gap-14 bg-light text-center">
-      <h1 className="text-4xl font-bold">Luxury Cars on Rent</h1>
+    <div className="flex flex-col items-center justify-center gap-6 md:gap-14 bg-light text-center min-h-screen">
+      <h1 className="text-2xl md:text-4xl font-bold">Luxury Cars on Rent</h1>
       <form
         onSubmit={handleSearch}
-        className="flex flex-col md:flex-row  items-start md:items-center justify-between p-6 rounded-lg md:rounded-full w-full max-w-80 md:max-w-200 bg-white  shadow-[0px_8px_20px_rgba(0,0,0,0.1]"
+        className="flex flex-col md:flex-row justify-between p-6 rounded-lg md:rounded-full w-full max-w-80 md:max-w-200 bg-white gap-2 md:gap-0 shadow-[0px_8px_20px_rgba(0,0,0,0.1]"
       >
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-10 min-md:ml-8">
+        <div className="flex flex-col md:flex-row  gap-10 min-md:ml-8 items-center justify-center flex-grow">
           <div className="flex flex-col items-start gap-2">
             <select
               required

@@ -3,6 +3,7 @@ import { createContext, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { set } from "react-hook-form";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 export const AppContext = createContext();
@@ -18,6 +19,8 @@ export const AppProvider = ({ children }) => {
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [bookings, setBookings] = useState([]);
+  const [pickupLocation, setPickupLocation] = useState([]);
+  const [returnLocation, setReturnLocation] = useState([]);
 
   const fetchUser = async () => {
     try {
@@ -117,6 +120,10 @@ export const AppProvider = ({ children }) => {
     fetchOwnerbookings,
     bookings,
     setBookings,
+    pickupLocation,
+    setPickupLocation,
+    returnLocation,
+    setReturnLocation,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

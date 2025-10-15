@@ -62,17 +62,17 @@ const Dashboard = () => {
   const recentBookings = bookings.slice(0, 4);
 
   return (
-    <div className=" flex flex-col gap-4 mx-auto mt-10">
+    <div className=" flex flex-col gap-4 mx-auto mt-10 items-center">
       <Title
         title="Admin Dashboard"
         subTitle=" Monitor overall platform performance including total
           cars,bookings,revenue and recent activities"
       />
-      <div className="grid grid-cols-4 gap-4 ">
+      <div className="grid  items-center justify-center sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
         {dashboardData.map((item, i) => (
           <div
             key={i}
-            className="flex justify-between w-[200px] border border-gray-300 p-4 rounded-lg items-center"
+            className="flex justify-between max-w-[200px] border border-gray-300 p-4 rounded-lg items-center"
           >
             <div className="flex flex-col">
               <h1 className="text-gray-500">{item.title}</h1>
@@ -84,8 +84,8 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
-      <div className="flex justify-between gap-4">
-        <div className="p-6 border border-gray-300 rounded-lg w-[60%] flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row items-center justify-center w-full sm:justify-between gap-4 p-4">
+        <div className="p-6 border border-gray-300 rounded-lg  w-full items-center md:w-[60%] flex flex-col gap-6 h-full">
           <div className=" flex flex-col gap-2">
             <p className="text-xl">Recent Bookings</p>
             <p className="text-gray-500">Latest customer bookings</p>
@@ -120,7 +120,7 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-        <div className="p-6 border border-gray-300 rounded-lg w-[40%] flex flex-col gap-6">
+        <div className="p-6 border border-gray-300 rounded-lg w-full items-center md:w-[40%] flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             <h1 className=" text-2xl">Monthly Revenue</h1>
             <p className="text-gray-500">Revenew for current month</p>

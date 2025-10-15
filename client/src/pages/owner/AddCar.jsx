@@ -49,16 +49,19 @@ const AddCar = () => {
   };
 
   return (
-    <div className=" flex flex-col gap-6 p-10">
+    <div className=" flex flex-col gap-6 mx-auto mt-10 p-10">
       <div className="flex flex-col gap-3">
-        <h1 className="text-2xl">Add New Car</h1>
-        <p className="text-gray-500 w-[500px]">
+        <h1 className="text-2xl text-center">Add New Car</h1>
+        <p className="text-gray-500 md:w-[500px] text-center">
           Fill in details to list a new car for booking,including
           pricing,availability and specifications
         </p>
       </div>
 
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="flex flex-col gap-4 max-w-[300px]"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="flex flex-col gap-4">
           <div className="flex gap-3">
             <label htmlFor="car-image">
@@ -83,7 +86,7 @@ const AddCar = () => {
             <p className="text-red-500">{errors.image.message}</p>
           )}
         </div>
-        <div className="flex  gap-4">
+        <div className="flex flex-col sm:flex gap-4">
           <div className="flex flex-col gap-2 w-full">
             <label>Brand</label>
             <input
@@ -105,7 +108,7 @@ const AddCar = () => {
             {errors.model && <p className="text-red-500">Model is required</p>}
           </div>
         </div>
-        <div className="flex  gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex flex-col gap-2 w-full">
             <label>Year</label>
             <select
@@ -155,7 +158,7 @@ const AddCar = () => {
             )}
           </div>
         </div>
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex flex-col gap-2 w-full">
             <label>Transmission</label>
             <select
@@ -235,13 +238,15 @@ const AddCar = () => {
             <p className="text-red-500">Description is required</p>
           )}
         </div>
-        <button
-          type="submit"
-          className="bg-primary text-white px-3 py-2 items-center rounded w-34 flex gap-2"
-        >
-          <img src={assets.tick_icon} />
-          {isLoading ? "Listing..." : " List Your Car"}
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-primary text-white px-3 py-2 items-center rounded w-34 flex gap-2 "
+          >
+            <img src={assets.tick_icon} />
+            {isLoading ? "Listing..." : " List Your Car"}
+          </button>
+        </div>
       </form>
     </div>
   );

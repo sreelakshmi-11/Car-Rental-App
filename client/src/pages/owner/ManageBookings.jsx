@@ -28,7 +28,7 @@ const ManageBookings = () => {
   }, []);
 
   return (
-    <div className=" flex flex-col mx-auto mt-10 gap-4 ">
+    <div className=" flex flex-col mx-auto mt-10 gap-4 p-10 overflow-x-auto">
       <Title
         title="Manage Bookings"
         subTitle="Track all customer bookings,approve or cancel requests,and manage booking statuses"
@@ -81,7 +81,7 @@ const ManageBookings = () => {
                   {currency}
                   {booking.price}
                 </td>
-                <td className="p-3 max-md:hidden">
+                <td className="p-3">
                   <span className="bg-gray-100 px-3 py-1 rounded-full text-xs">
                     offline
                   </span>

@@ -15,7 +15,11 @@ const Layout = () => {
   return (
     <div className="flex flex-col">
       <NavbarOwner />
-      <div className="flex">
+      <div className="hidden md:flex">
+        <Sidebar />
+        <Outlet />
+      </div>
+      <div className="flex flex-col md:hidden">
         <Sidebar />
         <Outlet />
       </div>

@@ -43,15 +43,22 @@ export const CheckAvailabilityOfCar = async (req, res) => {
 export const createBooking = async (req, res) => {
   try {
     const { _id } = req.user;
-    const { car, pickupDate, returnDate } = req.body;
+    const { car, pickupDate, returnDate, pickupLocation, returnLocation } =
+      req.body;
 
     const carData = await Car.findById(car);
 
     //calculating price
-    if (!car || !pickupDate || !returnDate) {
+    if (
+      !car ||
+      !pickupDate ||
+      !returnDate ||
+      !pickupLocation ||
+      !returnLocation
+    ) {
       return res.json({
         success: false,
-        message: "car details, Pickup and return dates are required",
+        message: "All details are required",
       });
     }
 
@@ -68,6 +75,8 @@ export const createBooking = async (req, res) => {
       user: _id,
       pickupDate,
       returnDate,
+      pickupLocation,
+      returnLocation,
       status: "pending",
       price,
     });
